@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop History Management</title>
+    <link rel="stylesheet" href="./CSS/style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="js/authCheck.js"></script>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">
+            CropManager
+        </div>
+        <ul class="menu">
+            <li class="active">
+                <a href="./pages/dashboard.html">Dashboard</a>
+            </li>
+            <li>
+                <a href="./pages/crops.html">Crops</a>
+            </li>
+            <li>
+                <a href="./pages/farmers.html">Farmers</a>
+            </li>
+            <li>
+                <a href="./pages/reports.html">Reports</a>
+            </li>
+            <li>
+                <a href="./pages/analytics.html">Analytics</a>
+            </li>
+            <li>
+                <a href="./pages/settings.html">Settings</a>
+            </li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div>
+                <h1>Crop Dashboard</h1>
+                <p>Manage all crop history records professionally.</p>
+            </div>
+
+            <div class="topbar-right">
+                <input type="text" class="top-search" id="weatherSearchBox" placeholder="Search city weather...">
+                <button id="weatherGpsBtn" style="background: none; border: none; cursor: pointer; font-size: 1.2rem; margin-right: 10px;">📍</button>
+                
+                <div class="datetime-box" id="dateTime">
+                    Loading...
+                </div>
+
+                <div class="notification-icon">
+                    🔔
+                </div>
+
+                <div class="profile-section">
+                    <div class="user-avatar">AD</div>
+                    <button class="profile-btn logout-style" onclick="logoutUser()">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <section style="margin: 0 20px 20px 20px;">
+            <div class="card weather-hero-card" style="display: flex; justify-content: space-between; align-items: center; padding: 24px; border-radius: 16px; transition: all 0.3s ease;">
+                
+                <div class="weather-google-left" style="display: flex; align-items: center; gap: 24px;">
+                    <div id="wHeroIcon" style="font-size: 3.8rem; display: flex; align-items: center; justify-content: center;">
+                        </div>
+                    <div>
+                        <h2 id="wHeroTemp" style="font-size: 3rem; margin: 0; font-weight: 500;">--°C</h2>
+                        <p id="wHeroCondition" style="margin: 4px 0 0 0; color: #70757a; font-weight: 400; font-size: 16px;">Syncing Atmosphere...</p>
+                        <small id="wHeroLocation" class="weather-location-label" style="display: block; margin-top: 6px;"><i class="fa-solid fa-location-dot"></i> Indore, MP</small>
+                    </div>
+                </div>
+                
+                <div class="weather-google-metrics" style="display: flex; gap: 25px; border-left: 1px solid #dadce0; padding-left: 25px; flex-wrap: wrap;">
+                    <div style="min-width: 90px;">
+                        <div class="m-label"><i class="fa-solid fa-wind" style="color: #78909c;"></i> Wind Speed</div>
+                        <div id="wWind" class="m-value" style="font-size: 15px; font-weight: 600; margin-top: 4px;">-- km/h</div>
+                    </div>
+                    <div style="min-width: 90px;">
+                        <div class="m-label"><i class="fa-solid fa-droplet" style="color: #0284c7;"></i> Humidity</div>
+                        <div id="wHumidity" class="m-value" style="font-size: 15px; font-weight: 600; margin-top: 4px;">--%</div>
+                    </div>
+                    <div style="min-width: 100px;">
+                        <div class="m-label">Spray Window</div>
+                        <div id="badgeSpray" class="badge-value" style="margin-top: 4px;">Checking...</div>
+                    </div>
+                    <div style="min-width: 100px;">
+                        <div class="m-label">Rain Threat</div>
+                        <div id="badgeRain" class="badge-value" style="margin-top: 4px;">Checking...</div>
+                    </div>
+                    <div style="min-width: 100px;">
+                        <div class="m-label">Irrigation</div>
+                        <div id="badgeIrrigation" class="badge-value" style="margin-top: 4px;">Checking...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="weatherAdvisoryBox" class="card" style="margin-top: 15px; border-left: 5px solid #2563eb; padding: 15px;">
+                <p id="wAdvisoryBody" style="margin: 0; font-size: 14px; color: #1e293b;">Loading precision farming advisories...</p>
+            </div>
+        </section>
+
+        <section class="cards">
+            <div class="card profit-card">
+                <h3>Total Profit</h3>
+                <p id="totalProfit">₹ 0</p>
+                <span>Overall business earnings</span>
+            </div>
+            <div class="card">
+                <h3>Total Crops</h3>
+                <p id="totalCrops">0</p>
+            </div>
+            <div class="card">
+                <h3>Total farmers</h3>
+                <p id="totalFarmers">0</p>
+            </div>
+            <div class="card production-card">
+                <h3>Crop Production</h3>
+                <div id="totalProduction"></div>
+            </div>
+        </section>
+
+        <section class="dashboard-grid">
+            <div class="form-container">
+                <div class="section-header">
+                    <h2>Add Crop</h2>
+                    <p>Enter crop details carefully.</p>
+                </div>
+                <form id="cropForm">
+                    <input type="text" id="cropName" placeholder="Crop Name" required>
+                    <input type="text" id="farmerName" placeholder="Farmer Name" required>
+                    <input type="text" id="season" placeholder="Season" required>
+                    <input type="number" id="landArea" placeholder="Land Area" required>
+                    <input type="number" id="production" placeholder="Production" required>
+                    <input type="text" id="fertilizerUsed" placeholder="Fertilizer Used">
+                    <input type="number" id="investment" placeholder="Investment Cost" required>
+                    <input type="number" id="revenue" placeholder="Revenue / Selling Amount" required>
+                    <button type="submit">Add Crop</button>
+                </form>
+            </div>
+
+            <div class="table-container">
+                <div class="section-header">
+                    <div class="table-header">
+                        <div>
+                            <h2>Crop Records</h2>
+                            <p>All saved crop history data.</p>
+                        </div>
+                        <input type="text" id="searchInput" placeholder="Search crops...">
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Crop</th>
+                            <th>Farmer</th>
+                            <th>Season</th>
+                            <th>Area</th>
+                            <th>Production</th>
+                            <th>Investment</th>
+                            <th>Selling Price</th>
+                            <th>Fertilizer</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cropTableBody"></tbody>
+                </table>
+                <div id="loadingSpinner">Loading crops...</div>
+                <div id="emptyState">No crop records found.</div>
+            </div>
+        </section>
+
+        <section class="chart-section" style="margin-top: 25px;">
+            <div class="chart-container" style="padding: 20px;">
+                <div class="section-header">
+                    <h2>7-Day Precision Weather Forecast</h2>
+                    <p>Plan your farm schedules according to next week's predictions.</p>
+                </div>
+                <div id="weatherForecastContainer" style="display: flex; gap: 15px; overflow-x: auto; padding: 10px 0; scrollbar-width: thin;">
+                    </div>
+            </div>
+        </section>
+
+        <section class="chart-section">
+            <div class="chart-container">
+                <div class="section-header">
+                    <h2>Crop Production Analytics</h2>
+                    <p>Live production insights by crop type.</p>
+                </div>
+                <canvas id="productionChart"></canvas>
+            </div>
+        </section>
+    </main>
+
+    <div id="notification"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="./js/script.js"></script>
+    <script src="../js/langEngine.js"></script>
+</body>
+
+</html>

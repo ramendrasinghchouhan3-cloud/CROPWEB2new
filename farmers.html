@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmers | CropManager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #3b82f6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+        
+        [data-theme="dark"] {
+            --primary: #f8fafc;
+            --primary-light: #cbd5e1;
+            --accent: #3b82f6;
+            --bg-main: #0f172a;      /* Dark Background */
+            --bg-card: #1e293b;      /* Dark Card/Form/Table Background */
+            --text-main: #f1f5f9;    /* Light Text */
+            --text-muted: #94a3b8;
+            --border: #334155;       /* Dark Border */
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: #111c2e; 
+            color: white;
+            padding: 24px 16px;
+            box-sizing: border-box;
+            position: fixed;
+            height: 100vh;
+        }
+
+        .sidebar .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #38bdf8; 
+            margin-bottom: 35px;
+            padding-left: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .sidebar .menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar .menu li {
+            margin-bottom: 12px;
+        }
+
+        .sidebar .menu a {
+            display: flex;
+            align-items: center;
+            color: #f1f5f9; 
+            text-decoration: none;
+            padding: 14px 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.2s;
+        }
+
+        .sidebar .menu li.active a {
+            background: #38bdf8;
+            color: #0f172a;
+        }
+
+        .sidebar .menu a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .main-content {
+            margin-left: 260px;
+            flex-grow: 1;
+            padding: 40px;
+            box-sizing: border-box;
+            max-width: calc(100% - 260px);
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .topbar-left h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+        }
+
+        .topbar-left p {
+            margin: 4px 0 0 0;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .profile-btn {
+            background: #ef4444; 
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            color: white;
+            transition: all 0.2s;
+        }
+
+        .profile-btn:hover {
+            background: #dc2626;
+        }
+        
+        .labor-summary-widgets {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .widget-card {
+            background: var(--bg-card);
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        }
+
+        .widget-card h4 {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .widget-card p {
+            margin: 12px 0 0 0;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .labor-grid {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .labor-card-form {
+            background: var(--bg-card);
+            padding: 28px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .labor-card-form h3 {
+            margin: 0 0 20px 0;
+            color: var(--primary);
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            font-size: 13px;
+            color: var(--text-main);
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: var(--primary);
+            box-sizing: border-box;
+            background-color: var(--bg-main) !important;
+            color: var(--text-main) !important;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            border: none;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: background 0.2s;
+        }
+
+        .submit-btn:hover {
+            background: var(--primary-light);
+        }
+
+        .table-container {
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            padding: 24px;
+            overflow-x: auto;
+        }
+
+        .table-header-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0 0 20px 0;
+        }
+
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .custom-table th {
+            background: var(--bg-main) !important;
+            color: var(--text-muted) !important;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .custom-table td {
+            padding: 16px;
+            font-size: 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        .action-link-btn {
+            background: none;
+            border: none;
+            color: var(--accent);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            padding: 0;
+            margin-right: 12px;
+        }
+
+        .action-link-btn.settle { color: var(--success); }
+        .action-link-btn.delete { color: var(--danger); }
+
+        .status-badge {
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .custom-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            justify-content: center; align-items: center;
+            z-index: 9999;
+        }
+
+        .modal-content {
+            background: var(--bg-card) !important;
+            color: var(--text-main) !important;
+            padding: 32px;
+            border-radius: 20px;
+            width: 440px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+            border: 1px solid var(--border);
+        }
+    </style>
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem("appTheme") || "light";
+            document.documentElement.setAttribute("data-theme", savedTheme);
+        })();
+    </script>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">CropManager</div>
+        <ul class="menu">
+            <li><a href="./dashboard.html" data-lang-key="nav_dashboard">Dashboard</a></li>
+            <li><a href="./crops.html" data-lang-key="nav_crops">Crops</a></li>
+            <li class="active"><a href="./farmers.html" data-lang-key="nav_farmers">Farmers</a></li>
+            <li><a href="./reports.html" data-lang-key="nav_reports">Reports</a></li>
+            <li><a href="./analytics.html" data-lang-key="nav_analytics">Analytics</a></li>
+            <li><a href="./settings.html" data-lang-key="nav_settings">Settings</a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div class="topbar-left">
+                <h1 data-lang-key="farmer_title">Workforce Labor Khata</h1>
+                <p data-lang-key="farmer_subtitle">Track advanced workflows, automated payroll accounting, and premium attendance timelines.</p>
+            </div>
+            <div class="topbar-right">
+                <button class="profile-btn" data-lang-key="btn_logout" onclick="logoutUser()">Logout</button>
+            </div>
+        </header>
+
+        <div class="labor-summary-widgets">
+            <div class="widget-card" style="border-top: 4px solid var(--accent);">
+                <h4 data-lang-key="widget_active_labor">Active Labor Force</h4>
+                <p id="widgetTotalLabor">0 Registered</p>
+            </div>
+            <div class="widget-card" style="border-top: 4px solid var(--warning);">
+                <h4 data-lang-key="widget_total_advance">Total Advance Out</h4>
+                <p id="widgetTotalAdvance">₹0</p>
+            </div>
+            <div class="widget-card" style="border-top: 4px solid var(--success);">
+                <h4 data-lang-key="widget_net_dues">Net Disbursable Dues</h4>
+                <p id="widgetPendingPayouts">₹0</p>
+            </div>
+        </div>
+
+        <div class="labor-grid">
+            
+            <div class="labor-card-form">
+                <h3 data-lang-key="form_title">Add New Workforce</h3>
+                <form id="laborForm">
+                    <div class="form-group">
+                        <label data-lang-key="lbl_labor_name">Labor/Worker Full Name</label>
+                        <input type="text" id="laborName" placeholder="e.g. Ram Singh" required>
+                    </div>
+                    <div class="form-group">
+                        <label data-lang-key="lbl_labor_phone">Phone Number</label>
+                        <input type="tel" id="laborPhone" pattern="[0-9]{10}" placeholder="10-digit mobile code" required>
+                    </div>
+                    <div class="form-group">
+                        <label data-lang-key="lbl_labor_address">Residential Address/Village</label>
+                        <input type="text" id="laborAddress" placeholder="e.g. Gram Pipliya, Ujjain" required>
+                    </div>
+                    <div class="form-group">
+                        <label data-lang-key="lbl_joining_date">Joining Date</label>
+                        <input type="date" id="joiningDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label data-lang-key="lbl_skill_core">Skill Core</label>
+                        <select id="laborSkill">
+                            <option value="Unskilled" data-lang-key="opt_unskilled">Unskilled (Harvesting/Weeding)</option>
+                            <option value="Skilled" data-lang-key="opt_skilled">Skilled Specialty (Tractor/Machinery)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label data-lang-key="lbl_daily_wage">Daily Wage Rate (Dihadi ₹)</label>
+                        <input type="number" id="dailyWage" placeholder="Amount per Day" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label data-lang-key="lbl_opening_advance">Opening Advance Balance</label>
+                        <input type="number" id="openingAdvance" value="0" min="0">
+                    </div>
+                    <button type="submit" class="submit-btn" style="background-color: var(--accent);" data-lang-key="btn_register_ledger">Register to Ledger</button>
+                </form>
+            </div>
+
+            <section class="table-container">
+                <h2 class="table-header-title" data-lang-key="ledger_title">Live Active Payroll Ledger</h2>
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th data-lang-key="th_worker">Worker Profile</th>
+                            <th data-lang-key="th_category">Category</th>
+                            <th style="text-align: center;" data-lang-key="th_attendance">Attendance Logger</th>
+                            <th data-lang-key="th_wage_rate">Wage Rate</th>
+                            <th data-lang-key="th_gross_earned">Gross Earned</th>
+                            <th data-lang-key="th_advance_paid">Advance Paid</th>
+                            <th data-lang-key="th_status">Ledger Status</th>
+                            <th style="text-align: center;" data-lang-key="th_controls">Controls</th>
+                        </tr>
+                    </thead>
+                    <tbody id="laborTableBody">
+                        </tbody>
+                </table>
+            </section>
+        </div>
+    </main>
+
+    <div class="custom-modal" id="attendanceMarkModal">
+        <div class="modal-content">
+            <h3 id="attMarkTitle" style="margin:0 0 6px 0; font-size:18px; font-weight:700;" data-lang-key="md_mark_attendance">Mark Attendance</h3>
+            <p style="font-size:13px; color:var(--text-muted); margin:0 0 20px 0;" data-lang-key="md_mark_subtitle">Select date to apply real-time attendance logs.</p>
+            <input type="hidden" id="attTargetLaborId">
+            
+            <div class="form-group">
+                <label data-lang-key="lbl_target_date">Target Log Date</label>
+                <input type="date" id="attSelectedDate" required>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 24px;">
+                <button class="submit-btn" style="background: var(--success);" onclick="saveCustomAttendance('Present')" data-lang-key="btn_present">🟢 Present</button>
+                <button class="submit-btn" style="background: var(--danger);" onclick="saveCustomAttendance('Absent')" data-lang-key="btn_absent">🔴 Absent</button>
+            </div>
+            <button class="submit-btn" style="background: var(--border); color:var(--text-main); margin-top: 10px;" onclick="closeAttendanceMarkModal()" data-lang-key="btn_dismiss">Dismiss</button>
+        </div>
+    </div>
+
+    <div class="custom-modal" id="attendanceHistoryModal">
+        <div class="modal-content" style="width: 480px; padding: 28px;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 20px;">
+                <div>
+                    <h3 id="historyModalTitle" style="margin:0; font-size:18px; font-weight:700; color:var(--primary);" data-lang-key="md_logs_title">Attendance Logs</h3>
+                    <p id="historyModalSubtitle" style="font-size:12px; color:var(--text-muted); margin:4px 0 0 0;"></p>
+                </div>
+                <button onclick="closeHistoryModal()" style="background:var(--border); border:none; color:var(--text-muted); font-size:16px; cursor:pointer; padding:6px 12px; border-radius:8px; font-weight:700;">✕</button>
+            </div>
+            
+            <div id="attendanceTimelineContainer" style="max-height: 280px; overflow-y:auto; padding-right:6px; margin-bottom:20px;">
+                </div>
+
+            <button class="submit-btn" onclick="closeHistoryModal()" data-lang-key="btn_close_timeline">Close Timeline</button>
+        </div>
+    </div>
+
+    <div class="custom-modal" id="advanceModal">
+        <div class="modal-content">
+            <h3 id="modalTitle" style="margin:0 0 4px 0;" data-lang-key="md_disburse_title">Disburse Advance</h3>
+            <p id="modalSubtitle" style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;"></p>
+            <input type="hidden" id="targetLaborId">
+            <div class="form-group">
+                <label data-lang-key="lbl_advance_amount">Advance Amount (₹)</label>
+                <input type="number" id="modalAmount" min="1" placeholder="Enter Cash/Online Value">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 24px;">
+                <button class="submit-btn" style="background: var(--warning); color: #000; font-weight:700;" onclick="processAdvanceSubmit()" data-lang-key="btn_confirm_debit">Confirm Debit</button>
+                <button class="submit-btn" style="background: var(--border); color: var(--text-main);" onclick="closeModal()" data-lang-key="btn_cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="custom-modal" id="receiptModal">
+        <div class="modal-content" style="width: 440px; font-family: monospace; background:#fff; color:#000 !important; border: 2px dashed var(--primary);">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <h2 style="margin:0; font-size:20px; letter-spacing:1px; color:#000;">🌾 CROP-MANAGER 🌾</h2>
+                <small style="color:#64748b; text-transform:uppercase;" data-lang-key="rc_subtitle">Workforce Settlement Ledger</small>
+                <div style="border-bottom:1px dashed #ccc; margin:15px 0;"></div>
+            </div>
+            <div id="receiptContent" style="font-size: 14px; line-height: 2; color:#000;">
+                </div>
+            <div style="border-bottom:1px dashed #ccc; margin:15px 0;"></div>
+            <p style="text-align: center; font-size: 11px; margin:0; color:#64748b;" data-lang-key="rc_footer">Please save snapshot for official WhatsApp Records.</p>
+            <button class="submit-btn" style="margin-top: 20px; background:#0f172a; color:#fff;" onclick="closeReceiptModal()" data-lang-key="btn_close_receipt">Close Receipt</button>
+        </div>
+    </div>
+
+    <script src="../js/script.js"></script>
+    <script src="../js/authCheck.js"></script>
+    <script src="../js/farmer.js"></script>
+    <script src="../js/langEngine.js"></script>
+</body>
+</html>

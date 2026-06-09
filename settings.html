@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CropManager - Control Panel</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <main class="profile-content">
+            
+            <div class="profile-header">
+                <h2 data-lang-key="control_panel_title">⚙️ Control Panel</h2>
+                <p data-lang-key="control_panel_subtitle">Manage your profile details, change system themes, and switch languages smoothly.</p>
+            </div>
+
+            <div class="profile-grid">
+                
+                <div class="profile-card left-card">
+                    <div class="avatar-container">
+                        <div class="profile-avatar-preview">
+                            <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" id="avatarPreview" alt="Profile Picture">
+                        </div>
+                        <h3 id="displayAdminName">Admin User</h3>
+                        <p class="role-badge" data-lang-key="role_admin">Super Admin</p>
+                    </div>
+                    
+                    <div class="upload-box">
+                        <label for="photoUpload" class="custom-file-upload">
+                            <i class="fa-solid fa-camera"></i> <span data-lang-key="btn_change_photo">Change Profile Photo</span>
+                        </label>
+                        <input type="file" id="photoUpload" accept="image/*" style="display: none;">
+                        <p class="upload-note" data-lang-key="photo_note">PNG, JPG (Max 2MB)</p>
+                    </div>
+                </div>
+
+                <div class="profile-card right-card">
+                    
+                    <div class="section-block" id="profileDetailsBlock">
+                        <div class="block-header">
+                            <h3><i class="fa-solid fa-address-card"></i> <span data-lang-key="sec_profile_title">Profile Details</span></h3>
+                            <button type="button" id="editProfileBtn" class="btn-edit">
+                                <i class="fa-solid fa-pen-to-square"></i> <span data-lang-key="btn_edit_profile">Edit Profile</span>
+                            </button>
+                        </div>
+                        
+                        <form id="profileFieldsForm" class="grid-form">
+                            <div class="form-group">
+                                <label data-lang-key="lbl_name">Full Name</label>
+                                <input type="text" id="profileName" value="Admin User" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label data-lang-key="lbl_email">Email Address</label>
+                                <input type="email" id="profileEmail" value="admin@gmail.com" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label data-lang-key="lbl_phone">Contact Number</label>
+                                <input type="text" id="profileContact" value="" placeholder="Enter your mobile number" data-lang-placeholder="ph_phone" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label data-lang-key="lbl_land">Base Land Area (Hectare)</label>
+                                <input type="number" id="profileLand" value="2.4" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label data-lang-key="lbl_district">Primary District</label>
+                                <input type="text" id="profileDistrict" value="Ujjain" disabled>
+                            </div>
+                            <div class="form-group full-width">
+                                <label data-lang-key="lbl_address">Permanent Address</label>
+                                <textarea id="profileAddress" rows="2" placeholder="Enter your full address" data-lang-placeholder="ph_address" disabled></textarea>
+                            </div>
+                            
+                            <div class="form-actions full-width" id="formActions" style="display: none;">
+                                <button type="button" id="cancelEditBtn" class="btn-cancel" data-lang-key="btn_cancel">Cancel</button>
+                                <button type="submit" class="btn-save" data-lang-key="btn_save">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <hr class="section-divider">
+
+                    <div class="section-block" id="themeBlock">
+                        <h3 data-lang-key="theme_section_title"><i class="fa-solid fa-palette"></i> Interface Style</h3>
+                        <p class="section-desc" data-lang-key="theme_section_desc">Choose how your CropManager portal looks.</p>
+                        
+                        <div class="theme-cards-container">
+                            <div class="theme-visual-card" id="lightThemeCard">
+                                <div class="theme-icon-wrapper sun-icon"><i class="fa-solid fa-sun"></i></div>
+                                <span class="theme-label" data-lang-key="theme_light_label">Light Mode</span>
+                                <div class="active-checkmark"><i class="fa-solid fa-circle-check"></i></div>
+                            </div>
+                            <div class="theme-visual-card" id="darkThemeCard">
+                                <div class="theme-icon-wrapper moon-icon"><i class="fa-solid fa-moon"></i></div>
+                                <span class="theme-label" data-lang-key="theme_dark_label">Dark Mode</span>
+                                <div class="active-checkmark"><i class="fa-solid fa-circle-check"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="section-divider">
+
+                    <div class="section-block" id="languageBlock">
+                        <h3 data-lang-key="lang_section_title"><i class="fa-solid fa-language"></i> System Language</h3>
+                        <p class="section-desc" data-lang-key="lang_section_desc">Select your preferred language for the dashboard.</p>
+                        
+                        <div class="lang-pills-container">
+                            <button type="button" class="lang-pill-btn" id="langEnBtn"><i class="fa-solid fa-globe"></i> English</button>
+                            <button type="button" class="lang-pill-btn" id="langHiBtn">🌐 हिन्दी</button>
+                        </div>
+                    </div>
+
+                    <hr class="section-divider">
+
+                    <div class="section-block" id="securityBlock">
+                        <h3><i class="fa-solid fa-lock"></i> <span data-lang-key="sec_security_title">Account Security</span></h3>
+                        <form id="passwordChangeForm" class="grid-form">
+                            <div class="form-group">
+                                <label data-lang-key="lbl_curr_pass">Current Password</label>
+                                <div class="password-input-wrapper">
+                                    <input type="password" id="currentPassword" placeholder="••••••••" required>
+                                    <i class="fa-solid fa-eye toggle-password" data-target="currentPassword"></i>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label data-lang-key="lbl_new_pass">New Password</label>
+                                <div class="password-input-wrapper">
+                                    <input type="password" id="newPassword" placeholder="Enter new password" data-lang-placeholder="ph_new_pass" required>
+                                    <i class="fa-solid fa-eye toggle-password" data-target="newPassword"></i>
+                                </div>
+                            </div>
+                            <div class="form-group full-width">
+                                <button type="submit" class="btn-password-update" data-lang-key="btn_update_pass">Update Password</button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/settings.js"></script>
+    <script src="../js/langEngine.js"></script>
+</body>
+</html>

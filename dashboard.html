@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | CropManager</title>
+
+    <link rel="stylesheet" href="../CSS/style.css">
+    <!-- FontAwesome joda hai dynamic weather icons aur search/GPS icons ke liye -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+           PREMIUM GOOGLE WEATHER COMPONENT STYLING (SCOPED)
+           ========================================================================== */
+        .premium-weather-section {
+            margin: 0 0 25px 0;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Row 1: Command Bar Layout */
+        .weather-command-bar {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .weather-search-wrapper {
+            position: relative;
+            flex: 1;
+        }
+
+        .weather-search-wrapper i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7f8c8d;
+        }
+
+        .weather-search-input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .weather-gps-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 20px;
+            border-radius: 10px;
+            border: none;
+            background: #2ecc71;
+            color: white;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 6px rgba(46, 204, 113, 0.2);
+        }
+
+        .weather-gps-btn:hover {
+            background: #27ae60;
+            transform: translateY(-1px);
+        }
+
+        /* Row 2: Split Grid (Hero + Badges) - Modified for Google Layout */
+        .weather-split-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 20px;
+        }
+
+        .weather-hero-card {
+            border-radius: 15px;
+            padding: 25px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .weather-google-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .weather-main-info h2 {
+            font-size: 54px; /* Big premium numeric size like Google Weather */
+            font-weight: 600;
+            margin: 0;
+            line-height: 1;
+        }
+
+        .weather-condition-text {
+            font-size: 15px;
+            font-weight: 500;
+            margin: 6px 0 0 0;
+            color: #70757a;
+        }
+
+        html[data-theme="dark"] .weather-condition-text {
+            color: #94a3b8;
+        }
+
+        .weather-google-metrics {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 13.5px;
+            border-left: 1px solid rgba(0, 0, 0, 0.1);
+            padding-left: 24px;
+        }
+
+        html[data-theme="dark"] .weather-google-metrics {
+            border-left-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .w-metric-row {
+            display: flex;
+            gap: 5px;
+        }
+
+        .m-label {
+            color: #70757a;
+        }
+
+        html[data-theme="dark"] .m-label {
+            color: #94a3b8;
+        }
+
+        .m-value {
+            font-weight: 500;
+        }
+
+        .weather-location-label {
+            font-size: 12px;
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #70757a;
+        }
+
+        html[data-theme="dark"] .weather-location-label {
+            color: #94a3b8;
+        }
+
+        .weather-hero-icon-block {
+            font-size: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Rotating animation for sun icon */
+        .fa-sun.animate-spin {
+            animation: spin-slow 20s linear infinite;
+        }
+        @keyframes spin-slow { 100% { transform: rotate(360deg); } }
+
+        /* Quick Agriculture Badges Stack */
+        .weather-badges-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            justify-content: space-between;
+        }
+
+        .agri-status-badge {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
+        .badge-value {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Color States for Badges */
+        .badge-state-safe { background: rgba(46, 204, 113, 0.15); color: #27ae60; border: 1px solid rgba(46, 204, 113, 0.3); }
+        .badge-state-warning { background: rgba(241, 196, 15, 0.15); color: #d35400; border: 1px solid rgba(241, 196, 15, 0.3); }
+        .badge-state-danger { background: rgba(231, 76, 60, 0.15); color: #c0392b; border: 1px solid rgba(231, 76, 60, 0.3); }
+
+        /* Row 3: AI Neon Advisory Alert Box */
+        .weather-ai-advisory-box {
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 6px solid #3498db;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .weather-ai-advisory-box.neon-pulse-danger {
+            border-left-color: #e74c3c;
+            animation: neon-pulse-red 2s infinite alternate;
+        }
+
+        @keyframes neon-pulse-red {
+            0% { box-shadow: 0 4px 12px rgba(231, 76, 60, 0.1); border-color: #e74c3c; }
+            100% { box-shadow: 0 4px 20px rgba(231, 76, 60, 0.4); border-color: #ff6b6b; }
+        }
+
+        .advisory-title-layout {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .advisory-main-text {
+            font-size: 13.5px;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .advisory-disclaimer-text {
+            font-size: 11px;
+            font-weight: 400;
+            opacity: 0.7;
+        }
+
+        /* Row 4: 7-Day Forecast (Horizontal Slider) */
+        .weather-forecast-scroll {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            scrollbar-width: thin;
+        }
+
+        .weather-forecast-scroll::-webkit-scrollbar {
+            height: 6px;
+        }
+        .weather-forecast-scroll::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+
+        .forecast-vertical-card {
+            min-width: 115px;
+            flex: 1;
+            padding: 15px 10px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .forecast-day-label { font-size: 13px; font-weight: 600; }
+        .forecast-card-icon { font-size: 24px; margin: 4px 0; }
+        .forecast-temp-range { font-size: 12px; font-weight: 500; }
+        .forecast-micro-tag { font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px; text-transform: uppercase; }
+
+        /* ==========================================================================
+           LIGHT & DARK THEME HOOK INTEGRATION
+           ========================================================================== */
+        /* Light Theme Adaptation (Closely aligned to image_60979f.png) */
+        html[data-theme="light"] .weather-search-input { background: #ffffff; color: #2c3e50; }
+        html[data-theme="light"] .weather-search-input:focus { border-color: #2ecc71; box-shadow: 0 0 8px rgba(46,204,113,0.2); }
+        html[data-theme="light"] .weather-hero-card { background: #ffffff !important; color: #202124 !important; border: 1px solid #dadce0; }
+        html[data-theme="light"] .weather-hero-icon-block { color: #f9ab00; }
+        html[data-theme="light"] .agri-status-badge { background: #ffffff; color: #2c3e50; border: 1px solid rgba(0,0,0,0.05); }
+        html[data-theme="light"] .weather-ai-advisory-box { background: #f8fafc; color: #334155; }
+        html[data-theme="light"] .advisory-title-layout { color: #1e293b; }
+        html[data-theme="light"] .forecast-vertical-card { background: #ffffff; border: 1px solid rgba(0,0,0,0.04); color: #334155; }
+        html[data-theme="light"] .forecast-day-label { color: #1e293b; }
+
+        /* Dark Theme Adaptation */
+        html[data-theme="dark"] .weather-search-input { background: #2c3e50; color: #ecf0f1; border-color: rgba(255,255,255,0.1); }
+        html[data-theme="dark"] .weather-search-input:focus { border-color: #2ecc71; box-shadow: 0 0 8px rgba(46,204,113,0.4); }
+        html[data-theme="dark"] .weather-hero-card { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: #f1f5f9; border: 1px solid rgba(255,255,255,0.05); }
+        html[data-theme="dark"] .weather-hero-icon-block { color: #38bdf8; }
+        html[data-theme="dark"] .agri-status-badge { background: #1e293b; color: #f1f5f9; border: 1px solid rgba(255,255,255,0.05); }
+        html[data-theme="dark"] .weather-ai-advisory-box { background: #1e293b; color: #e2e8f0; border-top: 1px solid rgba(255,255,255,0.02); }
+        html[data-theme="dark"] .advisory-title-layout { color: #f8fafc; }
+        html[data-theme="dark"] .forecast-vertical-card { background: #1e293b; border: 1px solid rgba(255,255,255,0.03); color: #e2e8f0; }
+        html[data-theme="dark"] .forecast-day-label { color: #f8fafc; }
+        html[data-theme="dark"] .weather-forecast-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .weather-split-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 576px) {
+            .weather-hero-card { grid-template-columns: 1fr; gap: 15px; }
+            .weather-google-metrics { border-left: none; padding-left: 0; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 15px; }
+            html[data-theme="dark"] .weather-google-metrics { border-top-color: rgba(255, 255, 255, 0.1); }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">
+            CropManager
+        </div>
+
+        <ul class="menu">
+            <li class="active">
+                <a href="./dashboard.html" data-lang-key="nav_dashboard">Dashboard</a>
+            </li>
+            <li>
+                <a href="./crops.html" data-lang-key="nav_crops">Crops</a>
+            </li>
+            <li>
+                <a href="./farmers.html" data-lang-key="nav_farmers">Farmers</a>
+            </li>
+            <li>
+                <a href="./reports.html" data-lang-key="nav_reports">Reports</a>
+            </li>
+            <li>
+                <a href="./analytics.html" data-lang-key="nav_analytics">Analytics</a>
+            </li>
+            <li>
+                <a href="./settings.html" data-lang-key="nav_settings">Settings</a>
+            </li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div>
+                <h1 data-lang-key="dash_title">Dashboard</h1>
+                <p data-lang-key="dash_subtitle">Welcome to CropManager professional dashboard.</p>
+            </div>
+
+            <div class="topbar-right">
+                <input type="text" class="top-search" id="searchInput" placeholder="Search...">
+                
+                <div class="datetime-box" id="dateTime">
+                    Loading...
+                </div>
+
+                <div class="notification-icon" style="position: relative; cursor: pointer;">
+                    🔔<span id="notifBadge" style="display:none; position:absolute; top:-8px; right:-8px; background:#e74c3c; color:white; font-size:10px; padding:2px 6px; border-radius:50%; font-weight:700;">0</span>
+                </div>
+
+                <div class="profile-section">
+                    <div class="user-avatar-container" style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; background: #34495e; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                        <img id="navUserPhoto" src="../assets/images/default-avatar.png" alt="Admin" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                        <span id="navUserInitials">AD</span>
+                    </div>
+                    <button class="profile-btn logout-style" onclick="logoutUser()" data-lang-key="btn_logout">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div id="laborDashboardAlert" style="margin-bottom: 25px; padding: 12px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; border-left: 5px solid #e74c3c; display: none;">
+        </div>
+
+        <!-- ==========================================================================
+             START: THE PREMIUM INTUATIVE GOOGLE WEATHER ENGINE INTERFACE
+             ========================================================================== -->
+        <section class="premium-weather-section">
+            
+            <!-- Row 1: Location Control Command Bar -->
+            <div class="weather-command-bar">
+                <div class="weather-search-wrapper">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="weatherSearchBox" class="weather-search-input" data-lang-placeholder="ph_weather_search" placeholder="Search City or Village...">
+                </div>
+                <button id="weatherGpsBtn" class="weather-gps-btn">
+                    <i class="fa-solid fa-location-crosshairs"></i>
+                    <span data-lang-key="btn_use_gps">Use Live Location</span>
+                </button>
+            </div>
+
+            <!-- Row 2: Hero Layout & Metric Indicator Badges -->
+            <div class="weather-split-grid">
+                
+                <!-- Main Status Block (Google Weather Hero Card) -->
+                <div class="weather-hero-card">
+                    <!-- Left Section: Premium Google Typography & Dynamic Icon -->
+                    <div class="weather-google-left">
+                        <div class="weather-hero-icon-block" id="wHeroIcon">
+                            <i class="fa-solid fa-cloud-sun animate-pulse"></i>
+                        </div>
+                        <div class="weather-main-info">
+                            <h2 id="wHeroTemp">--°C</h2>
+                            <div class="weather-condition-text" id="wHeroCondition" data-lang-key="w_loading">Syncing Weather...</div>
+                        </div>
+                    </div>
+
+                    <!-- Right Section: Linear Precise Meteorological Columns (Google Style) -->
+                    <div class="weather-google-metrics">
+                        <div class="w-metric-row">
+                            <span class="m-label">Precipitation:</span>
+                            <span id="wPrecipitation" class="m-value">0%</span>
+                        </div>
+                        <div class="w-metric-row">
+                            <span class="m-label">Humidity:</span>
+                            <span id="wHumidity" class="m-value">--%</span>
+                        </div>
+                        <div class="w-metric-row">
+                            <span class="m-label">Wind:</span>
+                            <span id="wWind" class="m-value">-- km/h</span>
+                        </div>
+                        <div class="weather-location-label">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span id="wHeroLocation">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Three Smart Agri Condition Status Badges -->
+                <div class="weather-badges-stack">
+                    <div class="agri-status-badge">
+                        <span data-lang-key="lbl_badge_spray"><i class="fa-solid fa-spray-can-sparkles"></i> Spray Window</span>
+                        <span id="badgeSpray" class="badge-value badge-state-safe">--</span>
+                    </div>
+                    <div class="agri-status-badge">
+                        <span data-lang-key="lbl_badge_rain"><i class="fa-solid fa-cloud-showers-heavy"></i> Rain Threat</span>
+                        <span id="badgeRain" class="badge-value badge-state-safe">--</span>
+                    </div>
+                    <div class="agri-status-badge">
+                        <span data-lang-key="lbl_badge_irrigation"><i class="fa-solid fa-droplet"></i> Irrigation Need</span>
+                        <span id="badgeIrrigation" class="badge-value badge-state-safe">--</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Row 3: Automated Smart AI Krishi Advisory Board -->
+            <div class="weather-ai-advisory-box" id="weatherAdvisoryBox">
+                <div class="advisory-title-layout">
+                    <i class="fa-solid fa-brain"></i>
+                    <span id="wAdvisoryTitle" data-lang-key="lbl_ai_advisory">AI Crop Advisor Summary</span>
+                </div>
+                <div class="advisory-main-text" id="wAdvisoryBody" data-lang-key="w_gathering_data">
+                    Analyzing atmospheric data matrices to formulate customized localized field suggestions...
+                </div>
+                <hr style="border: none; border-top: 1px solid rgba(0,0,0,0.05); margin: 8px 0;">
+                <div class="advisory-disclaimer-text" data-lang-key="lbl_weather_disclaimer">
+                    ℹ️ Disclaimer: Assistive calculations based on live models. Inspect actual ground conditions before executing key activities.
+                </div>
+            </div>
+
+            <!-- Row 4: Google Style 7-Day Forecasting Slider Grid -->
+            <div class="weather-forecast-scroll" id="weatherForecastContainer">
+                <!-- JavaScript se 7 vertical columns automatic inject honge -->
+            </div>
+
+        </section>
+        <!-- ==========================================================================
+             END: PREMIUM WEATHER INTERFACE
+             ========================================================================== -->
+
+        <section class="cards">
+            <div class="card">
+                <h3 data-lang-key="widget_total_crops">Total Crops</h3>
+                <p id="totalCrops">0</p>
+            </div>
+
+            <div class="card">
+                <h3 data-lang-key="widget_total_farmers">Total Farmers</h3>
+                <p id="totalFarmers">0</p>
+            </div>
+
+            <div class="card">
+                <h3 data-lang-key="widget_total_profit">Total Profit</h3>
+                <p id="totalProfit">₹ 0</p>
+            </div>
+
+            <div class="card production-card">
+                <h3 data-lang-key="widget_crop_production">Crop Production</h3>
+                <div id="totalProduction"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="../js/script.js"></script>
+    <script src="../js/authCheck.js"></script>
+    <script src="../js/dashboard.js"></script>
+    <script src="../js/langEngine.js"></script>
+    <!-- Naya core Engine link kiya gaya hai -->
+    <script src="../js/weatherEngine.js"></script>
+</body>
+
+</html>

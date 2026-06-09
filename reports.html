@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports | CropManager</title>
+    <link rel="stylesheet" href="../CSS/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+    (function () {
+        const savedTheme = localStorage.getItem("appTheme") || "light";
+        document.documentElement.setAttribute("data-theme", savedTheme);
+    })();
+</script>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">CropManager</div>
+        <ul class="menu">
+            <li><a href="./dashboard.html" data-lang-key="nav_dashboard">Dashboard</a></li>
+            <li><a href="./crops.html" data-lang-key="nav_crops">Crops</a></li>
+            <li><a href="./farmers.html" data-lang-key="nav_farmers">Farmers</a></li>
+            <li class="active"><a href="./reports.html" data-lang-key="nav_reports">Reports</a></li>
+            <li><a href="./analytics.html" data-lang-key="nav_analytics">Analytics</a></li>
+            <li><a href="./settings.html" data-lang-key="nav_settings">Settings</a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div class="topbar-left">
+                <h1 data-lang-key="reports_title">Reports</h1>
+                <p data-lang-key="reports_subtitle">Professional crop reports and business insights.</p>
+            </div>
+            <div class="topbar-right">
+                <button class="profile-btn" data-lang-key="btn_logout" onclick="logoutUser()">Logout</button>
+            </div>
+        </header>
+
+        <section class="cards">
+            <div class="card">
+                <h3 data-lang-key="widget_total_crops">Total Crops</h3>
+                <p id="totalCrops">0</p>
+            </div>
+            <div class="card">
+                <h3 data-lang-key="widget_total_farmers">Total Farmers</h3>
+                <p id="totalFarmers">0</p>
+            </div>
+            <div class="card">
+                <h3 data-lang-key="widget_total_profit">Total Profit</h3>
+                <p id="totalProfit">₹ 0</p>
+            </div>
+        </section>
+
+        <section class="table-container">
+            <div class="section-header">
+                <h2 data-lang-key="rep_table_title">Recent Crop Reports</h2>
+                <p data-lang-key="rep_table_subtitle">Complete crop history records.</p>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th data-lang-key="th_crop">Crop</th>
+                        <th data-lang-key="th_farmer_rep">Farmer</th>
+                        <th data-lang-key="th_season_rep">Season</th>
+                        <th data-lang-key="th_area_rep">Area</th>
+                        <th data-lang-key="th_production_rep">Production</th>
+                        <th data-lang-key="th_investment_rep">Investment</th>
+                        <th data-lang-key="th_revenue_rep">Revenue</th>
+                        <th data-lang-key="th_fertilizer_rep">Fertilizer</th>
+                        <th data-lang-key="th_actions_rep">Actions</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="cropTableBody"></tbody>
+            </table>
+        </section>
+
+    </main>
+
+    <script src="../js/script.js"></script>
+    <script src="../js/authCheck.js"></script>
+    <script src="../js/langEngine.js"></script>
+</body>
+
+</html>

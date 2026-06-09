@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics | CropManager</title>
+    <link rel="stylesheet" href="../CSS/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">CropManager</div>
+        <ul class="menu">
+            <li><a href="./dashboard.html" data-lang-key="nav_dashboard">Dashboard</a></li>
+            <li><a href="./crops.html" data-lang-key="nav_crops">Crops</a></li>
+            <li><a href="./farmers.html" data-lang-key="nav_farmers">Farmers</a></li>
+            <li><a href="./reports.html" data-lang-key="nav_reports">Reports</a></li>
+            <li class="active"><a href="./analytics.html" data-lang-key="nav_analytics">Analytics</a></li>
+            <li><a href="./settings.html" data-lang-key="nav_settings">Settings</a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div class="topbar-left">
+                <h1 data-lang-key="analytics_title">Analytics Dashboard</h1>
+                <p data-lang-key="analytics_subtitle">Smart agriculture analytics and production insights.</p>
+            </div>
+            <div class="topbar-right">
+                <button class="profile-btn" data-lang-key="btn_logout" onclick="logoutUser()">Logout</button>
+            </div>
+            <script>
+    (function () {
+        const savedTheme = localStorage.getItem("appTheme") || "light";
+        document.documentElement.setAttribute("data-theme", savedTheme);
+    })();
+</script>
+        </header>
+
+        <section class="cards">
+            <div class="card">
+                <h3 data-lang-key="widget_total_crops">Total Crops</h3>
+                <p id="totalCrops">0</p>
+            </div>
+            <div class="card">
+                <h3 data-lang-key="widget_total_farmers">Total Farmers</h3>
+                <p id="totalFarmers">0</p>
+            </div>
+            <div class="card profit-card">
+                <h3 data-lang-key="widget_total_profit">Total Profit</h3>
+                <p id="totalProfit">₹ 0</p>
+            </div>
+        </section>
+
+        <section class="chart-section">
+            <div class="chart-container">
+                <div class="section-header">
+                    <h2 data-lang-key="chart_title">Production Analytics</h2>
+                    <p data-lang-key="chart_subtitle">Crop-wise production data.</p>
+                </div>
+                <canvas id="productionChart"></canvas>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/script.js"></script>
+    <script src="../js/authCheck.js"></script>
+    <script src="../js/langEngine.js"></script>
+</body>
+
+</html>

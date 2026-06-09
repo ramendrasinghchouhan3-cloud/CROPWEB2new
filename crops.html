@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Crops | CropManager</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../CSS/style.css">
+    <!-- GOOGLE FONT -->
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+<script>
+    (function () {
+        const savedTheme = localStorage.getItem("appTheme") || "light";
+        document.documentElement.setAttribute("data-theme", savedTheme);
+    })();
+</script>
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            CropManager
+
+        </div>
+
+        <ul class="menu">
+
+            <li>
+                <a href="dashboard.html" data-lang-key="nav_dashboard">
+                    Dashboard
+                </a>
+            </li>
+
+            <li class="active">
+                <a href="crops.html" data-lang-key="nav_crops">
+                    Crops
+                </a>
+            </li>
+
+            <li>
+                <a href="farmers.html" data-lang-key="nav_farmers">
+                    Farmers
+                </a>
+            </li>
+
+            <li>
+                <a href="reports.html" data-lang-key="nav_reports">
+                    Reports
+                </a>
+            </li>
+
+            <li>
+                <a href="analytics.html" data-lang-key="nav_analytics">
+                    Analytics
+                </a>
+            </li>
+
+            <li>
+                <a href="settings.html" data-lang-key="nav_settings">
+                    Settings
+                </a>
+            </li>
+
+        </ul>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main-content">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+
+            <div>
+                <h1 data-lang-key="crop_title">Crop Management</h1>
+                <p data-lang-key="crop_subtitle">Manage all crop records professionally.</p>
+            </div>
+
+            <div class="topbar-right">
+                <input type="text" id="searchInput" class="top-search" placeholder="Search crops...">
+                
+                <div class="datetime-box" id="dateTime">
+                    Loading...
+                </div>
+
+                <div class="notification-icon">
+                    🔔
+                </div>
+
+                <div class="profile-section">
+                    <div class="user-avatar">AD</div>
+                    <button class="profile-btn logout-style" onclick="logoutUser()" data-lang-key="btn_logout">
+                        Logout
+                    </button>
+                </div>
+            </div>
+
+        </header>
+
+        <!-- DASHBOARD CARDS -->
+
+        <section class="cards">
+
+            <div class="card">
+                <h3 data-lang-key="widget_total_crops">Total Crops</h3>
+                <p id="totalCrops">0</p>
+            </div>
+
+            <div class="card">
+                <h3 data-lang-key="widget_total_farmers">Total Farmers</h3>
+                <p id="totalFarmers">0</p>
+            </div>
+
+            <div class="card profit-card">
+                <h3 data-lang-key="widget_total_profit">Total Profit</h3>
+                <p id="totalProfit">₹ 0</p>
+                <span data-lang-key="widget_overall_earnings">
+                    Overall business earnings
+                </span>
+            </div>
+
+            <div class="card production-card">
+                <h3 data-lang-key="widget_crop_production">Crop Production</h3>
+                <div id="totalProduction"></div>
+            </div>
+
+        </section>
+
+        <!-- MAIN GRID -->
+
+        <section class="dashboard-grid">
+
+            <!-- FORM SECTION -->
+
+            <div class="form-container">
+
+                <div class="section-header">
+                    <h2 data-lang-key="crop_form_title">Add Crop</h2>
+                    <p data-lang-key="crop_form_subtitle">
+                        Enter crop details carefully.
+                    </p>
+                </div>
+
+                <!-- Note: Form ke inputs placeholder badalne ke liye hum dictionary engine handle kar sakte hain, abhi key tags labels/titles pe fixed hain -->
+                <form id="cropForm">
+
+                    <input
+                        type="text"
+                        id="cropName"
+                        placeholder="Crop Name"
+                        required
+                    >
+
+                    <input
+                        type="text"
+                        id="farmerName"
+                        placeholder="Farmer Name"
+                        required
+                    >
+
+                    <input
+                        type="text"
+                        id="season"
+                        placeholder="Season"
+                        required
+                    >
+
+                    <input
+                        type="number"
+                        id="landArea"
+                        placeholder="Land Area"
+                        required
+                    >
+
+                    <input
+                        type="number"
+                        id="production"
+                        placeholder="Production"
+                        required
+                    >
+
+                    <input
+                        type="text"
+                        id="fertilizerUsed"
+                        placeholder="Fertilizer Used"
+                    >
+
+                    <input
+                        type="number"
+                        id="investment"
+                        placeholder="Investment Cost"
+                        required
+                    >
+
+                    <input
+                        type="number"
+                        id="revenue"
+                        placeholder="Revenue"
+                        required
+                    >
+
+                    <button type="submit" data-lang-key="crop_form_title">
+                        Add Crop
+                    </button>
+
+                </form>
+
+            </div>
+
+            <!-- TABLE SECTION -->
+
+            <div class="table-container">
+
+                <div class="section-header">
+
+                    <div class="table-header">
+
+                        <div>
+                            <h2 data-lang-key="crop_table_title">
+                                Crop Records
+                            </h2>
+                            <p data-lang-key="crop_table_subtitle">
+                                All saved crop data.
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th data-lang-key="th_crop">Crop</th>
+                            <th data-lang-key="th_farmer">Farmer</th>
+                            <th data-lang-key="th_season">Season</th>
+                            <th data-lang-key="th_area">Area</th>
+                            <th data-lang-key="th_production">Production</th>
+                            <th data-lang-key="th_investment">Investment</th>
+                            <th data-lang-key="th_revenue">Revenue</th>
+                            <th data-lang-key="th_fertilizer">Fertilizer</th>
+                            <th data-lang-key="th_actions">Actions</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="cropTableBody">
+                    </tbody>
+
+                </table>
+
+                <div id="loadingSpinner">
+                    Loading crops...
+                </div>
+
+                <div id="emptyState">
+                    No crop records found.
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <div id="notification"></div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/script.js"></script>
+    <script src="../js/authCheck.js"></script>
+    <!-- Sabse last me engine render ho rha hai -->
+    <script src="../js/langEngine.js"></script>
+</body>
+
+</html>
